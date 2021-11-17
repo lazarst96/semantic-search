@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  milvus:
+    image: milvusdb/milvus:1.1.1-cpu-d061621-330cc6
+    ports:
+      - "19530:19530"
+      - "19121:19121"
+    volumes:
+      - ${MILVUS_DIR}/db:/var/lib/milvus/db
+      - ${MILVUS_DIR}/conf:/var/lib/milvus/conf
+      - ${MILVUS_DIR}/logs:/var/lib/milvus/logs
+      - ${MILVUS_DIR}/wal:/var/lib/milvus/wal
+    networks:
+      - milvus-net
+  tf-serving:
+    image: tensorflow/serving:latest-gpu
+    ports:
+      - "8500:8500"
+      - "8501:8501"
+    volumes:
+      - ${SERVING_MODELS_DIR}/dan:/models/dan
+      - ${SERVING_MODELS_DIR}/models.config:/models/models.config
+    command: --model_config_file=/models/models.config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              capabilities: [gpu]
+    networks:
+      - tf-serving-net
+  search-api:
+    build:
+      context: ./search-api
+    ports:
+      - "3001:80"
+    volumes:
+      - ./search-api/src:/app/src
+    networks:
+      - milvus-net
+      - tf-serving-net
+      - frontend-net
+    depends_on:
+      - milvus
+      - tf-serving
+
+networks:
+  tf-serving-net:
+  milvus-net:
+  frontend-net:
