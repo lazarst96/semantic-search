@@ -5,6 +5,11 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "FastAPI Search API"
     API_PREFIX: str = "/api"
 
+    MONGO_DB: str = 'search-db'
+    MONGO_HOST: str = 'search'
+    MONGO_USERNAME: str = 'mongo-user'
+    MONGO_PASSWORD: str = 'mongo-pass'
+
     TF_SERVING_URL: AnyHttpUrl = 'http://tf-serving:8501/v1/models/dan:predict'
 
     MILVUS_HOST = 'milvus'

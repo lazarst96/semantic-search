@@ -10,7 +10,7 @@ class ModelServing(object):
     headers = {"content-type": "application/json"}
 
     @classmethod
-    async def get_text_embedding(cls, text: str) -> List[float]:
+    async def get_text_embedding_async(cls, text: str) -> List[float]:
         data = json.dumps({"signature_name": "serving_default", "instances": [text]})
         client = httpx.AsyncClient()
         response = await client.post(cls.text_model_url, data=data, headers=cls.headers)
