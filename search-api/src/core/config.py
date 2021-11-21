@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     MONGO_USERNAME: str = 'mongo-user'
     MONGO_PASSWORD: str = 'mongo-pass'
 
-    TF_SERVING_URL: AnyHttpUrl = 'http://tf-serving:8501/v1/models/dan:predict'
+    TF_SERVING_URL: AnyHttpUrl = 'http://tf-serving:8501/v1/models'
 
     MILVUS_HOST = 'milvus'
     MILVUS_PORT = '19530'

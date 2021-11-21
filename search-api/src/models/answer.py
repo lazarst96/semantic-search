@@ -1,10 +1,23 @@
-from sqlalchemy import Column, String, ARRAY, Float
+from typing import List, Optional
+from pydantic import BaseModel, Field
+from bson.objectid import ObjectId
 
-from src.db.base_class import Base
-from src.core.config import settings
+from .base import PyObjectId
 
 
-class Question(Base):
-    text = Column(String(255), nullable=False)
-    owner_name = Column(String(32), nullable=True, unique=False, index=True)
-    embedding = Column(ARRAY(item_type=Float, dimensions=settings.VECTOR_DIM))
+class Sentence(BaseModel):
+    text: str = Field(...)
+    embedding: List[float] = Field(..., min_items=512)
+
+
+class Answer(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    content: str = Field(...)
+    owner: Optional[str] = None
+    sentences: List[Sentence] = Field(...)
+    embedding: List[float] = Field(..., min_items=512)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}

@@ -2,15 +2,23 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
-from .base import PyObjectId
+from src.models.base import PyObjectId
 
 
-class Question(BaseModel):
-    id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    index_id: int = Field(...)
-    text: str = Field(...)
+class ResourceIn(BaseModel):
+    content: str
     owner: Optional[str] = None
-    embedding: List[float] = Field(..., min_items=512)
+
+
+class Sentence(BaseModel):
+    text: str
+
+
+class Resource(BaseModel):
+    id: PyObjectId = Field(alias="_id")
+    content: str
+    owner: Optional[str]
+    sentences: List[Sentence]
 
     class Config:
         allow_population_by_field_name = True

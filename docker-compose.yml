@@ -32,6 +32,7 @@ services:
       - "8501:8501"
     volumes:
       - ${SERVING_MODELS_DIR}/dan:/models/dan
+      - ${SERVING_MODELS_DIR}/qa:/models/qa
       - ${SERVING_MODELS_DIR}/models.config:/models/models.config
     command: --model_config_file=/models/models.config
     deploy:

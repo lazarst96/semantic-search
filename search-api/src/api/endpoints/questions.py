@@ -1,9 +1,32 @@
-from fastapi import APIRouter, Path
+from typing import List
+from fastapi import APIRouter, Depends, Path, Body, Query
+from pymongo.database import Database
+from src import repository, schemas
 
+from src.api import deps
 
 router = APIRouter()
 
 
-@router.get("/{question}/similar")
-async def get_similar_questions(question: str = Path(...)):
-    return {"question": question}
+@router.get("/{question}/similar", response_model=List[schemas.SimilarQuestion])
+def get_similar_questions(db: Database = Depends(deps.get_mongo_db),
+                          question: str = Path(...),
+                          top_k: int = Query(default=5)):
+    return repository.question.get_similar(db=db, query=question, top_k=top_k)
+
+
+@router.get("/reset")
+def reset_collection(db: Database = Depends(deps.get_mongo_db)):
+    db.get_collection("questions").delete_many({})
+    return {'message': 'OK!'}
+
+
+@router.get("", response_model=List[schemas.Question])
+def create_question(db: Database = Depends(deps.get_mongo_db)):
+    return repository.question.get_all(db=db)
+
+
+@router.post("", response_model=schemas.Question)
+def create_question(db: Database = Depends(deps.get_mongo_db),
+                    payload: schemas.QuestionIn = Body(...)):
+    return repository.question.create(db=db, payload=payload)
