@@ -20,5 +20,3 @@ COPY ./start.sh /app/start.sh
 RUN chmod +x ./start.sh
 RUN adduser -D user
 USER user
-
-CMD ["./start.sh"]

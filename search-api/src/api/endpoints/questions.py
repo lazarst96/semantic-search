@@ -15,14 +15,8 @@ def get_similar_questions(db: Database = Depends(deps.get_mongo_db),
     return repository.question.get_similar(db=db, query=question, top_k=top_k)
 
 
-@router.get("/reset")
-def reset_collection(db: Database = Depends(deps.get_mongo_db)):
-    db.get_collection("questions").delete_many({})
-    return {'message': 'OK!'}
-
-
 @router.get("", response_model=List[schemas.Question])
-def create_question(db: Database = Depends(deps.get_mongo_db)):
+def get_question_list(db: Database = Depends(deps.get_mongo_db)):
     return repository.question.get_all(db=db)
 
 

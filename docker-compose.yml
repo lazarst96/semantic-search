@@ -46,9 +46,11 @@ services:
   search-api:
     build:
       context: ./search-api
+    command: sh -c "./start.sh"
     ports:
       - "3001:80"
     volumes:
+      - /home/lazar/Projects/semantic-search/resources/init_data/resources.txt:/app/data/resources.txt
       - ./search-api/src:/app/src
     networks:
       - mongo-net

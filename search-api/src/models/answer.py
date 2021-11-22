@@ -7,7 +7,7 @@ from .base import PyObjectId
 
 class Sentence(BaseModel):
     text: str = Field(...)
-    embedding: List[float] = Field(..., min_items=512)
+    embedding: Optional[List[float]] = Field(..., min_items=512)
 
 
 class Answer(BaseModel):

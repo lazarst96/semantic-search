@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Path
 from pymongo.database import Database
 
 from src import repository, schemas
@@ -9,12 +9,8 @@ from src.api import deps
 router = APIRouter()
 
 
-@router.get("", response_model=List[schemas.Resource])
-def get_all_answers(db: Database = Depends(deps.get_mongo_db)):
-    return repository.resource.get_all(db=db)
+@router.get("/{question}", response_model=List[schemas.Answer])
+def get_answers(db: Database = Depends(deps.get_mongo_db),
+                question: str = Path(...)):
 
-
-@router.post("", response_model=schemas.Resource)
-def create_answer(db: Database = Depends(deps.get_mongo_db),
-                  payload: schemas.ResourceIn = Body(...)):
-    return repository.resource.create(db=db, payload=payload)
+    return repository.resource.get_answers_for_query(db=db, query=question)

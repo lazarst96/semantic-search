@@ -8,10 +8,10 @@ def get_mongo_db() -> Generator:
     client = None
     try:
         client = MongoClient(host=settings.MONGO_HOST,
-                             port=27017,
+                             port=settings.MONGO_PORT,
                              username=settings.MONGO_USERNAME,
                              password=settings.MONGO_PASSWORD)
-        yield client[settings.MONGO_DB]
+        yield client.get_database(settings.MONGO_DB)
     finally:
         if client is not None:
             client.close()

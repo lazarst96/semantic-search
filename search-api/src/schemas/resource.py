@@ -24,3 +24,15 @@ class Resource(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+
+class RankedResource(BaseModel):
+    id: PyObjectId = Field(alias="_id")
+    content: str
+    owner: Optional[str]
+    score: float
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}

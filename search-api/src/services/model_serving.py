@@ -79,8 +79,8 @@ class ModelServing(object):
         return predictions
 
     @classmethod
-    def get_resource_embedding(cls, sentences: List[str], context: str) -> List[float]:
-        payload = [{"input": sent, "context": context} for sent in sentences]
+    def get_resource_embedding(cls, sentences: List[str], contexts: List[str]) -> List[float]:
+        payload = [{"input": sent, "context": context} for sent, context in zip(sentences, contexts)]
         data = {
             "signature_name": cls.__answer_signature,
             "instances": payload

@@ -7,6 +7,7 @@ class Settings(BaseSettings):
 
     MONGO_DB: str = 'search-db'
     MONGO_HOST: str = 'search'
+    MONGO_PORT: int = 27017
     MONGO_USERNAME: str = 'mongo-user'
     MONGO_PASSWORD: str = 'mongo-pass'
 
