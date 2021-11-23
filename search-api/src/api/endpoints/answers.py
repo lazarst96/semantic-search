@@ -13,4 +13,4 @@ router = APIRouter()
 def get_answers(db: Database = Depends(deps.get_mongo_db),
                 question: str = Path(...)):
 
-    return repository.resource.get_answers_for_query(db=db, query=question)
+    return repository.answer.get_answers_for_query(db=db, query=question)

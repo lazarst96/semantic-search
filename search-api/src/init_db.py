@@ -8,7 +8,7 @@ from milvus import Milvus, MetricType
 
 from src.core.config import settings
 from src.db import milvus_db
-from src.models import Answer
+from src.models import Resource
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

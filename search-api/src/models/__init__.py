@@ -1,2 +1,2 @@
-from .answer import Sentence, Answer
+from .resource import Sentence, Resource
 from .question import Question
