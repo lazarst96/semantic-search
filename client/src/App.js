@@ -1,5 +1,5 @@
 import './App.css';
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, Link} from "react-router-dom";
 
 import Home from "./views/Home";
 import Questions from "./views/Questions";
@@ -17,14 +17,17 @@ function App() {
                             variant="h5"
                             noWrap
                             component="div"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, flexGrow: 1}}>
-                            Semantic Q&A Search
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, flexGrow: 1, textDecoration:'none'}}>
+                            <Link to={"/"} className="App-link">
+                                {process.env.REACT_APP_TITLE || "Semantic Q&A Search"}
+                            </Link>
                         </Typography>
                         <Box sx={{ml: 4, display: {xs: 'none', md: 'flex'}}}>
                             <Button
+                                component={Link}
+                                to='/similar-questions'
                                 variant="text"
                                 key="SimilarQuestions"
-                                href='/similar-questions'
                                 sx={{
                                     my: 2,
                                     color: 'black',
@@ -39,24 +42,25 @@ function App() {
                                     Similar Questions
                                 </Typography>
                             </Button>
+
                             <Button
+                                component={Link}
+                                to='/question-answering'
                                 variant="text"
                                 key="Answers"
-                                href='/question-answering'
                                 sx={{
                                     my: 2,
                                     ml: 4,
                                     color: 'black',
                                     display: 'block',
                                     textTransform: 'capitalize',
-                                    fontWeight: 'thin'
+                                    fontWeight: 'thin',
+                                    textDecoration: 'none'
                                 }}>
                                 <Typography
                                     variant="subtitle1"
                                     noWrap
-                                    component="span">
-                                    Question Answering
-                                </Typography>
+                                    component="span">Question Answering</Typography>
                             </Button>
                         </Box>
                     </Toolbar>

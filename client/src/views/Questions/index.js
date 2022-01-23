@@ -1,38 +1,54 @@
-import React from "react";
-import {Avatar, Card, CardHeader, Stack, Typography} from "@mui/material";
-import {blue} from "@mui/material/colors";
+import React, {useEffect, useState} from "react";
+import {Stack} from "@mui/material";
 import SearchBar from "../../components/SearchBar";
+import QuestionResult from "../../components/QuestionResult";
+import questionApi from "../../services/question";
 
-export default class Questions extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
+
+export default function Questions() {
+    const topK = 7;
+    const [loading, setLoading] = useState(false);
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+        document.title = `Questions :: ${process.env.REACT_APP_TITLE}`
+    }, []);
+
+    const handleSearch = async (query) => {
+        setLoading(true);
+        const response = await questionApi.getSimilarQuestions(query, topK);
+        setQuestions(response.data);
+        setLoading(false);
     }
 
-    handleSearch = (query) => {
-        console.log(query);
-    }
+    return (
+        <div className="Questions">
+            <SearchBar label="Search similar questions..." handleSearch={handleSearch}/>
+            <Stack sx={{mt: 6}}>
+                {
+                    (loading)
+                        ? [...Array(topK).keys()].map(key =>
+                            <QuestionResult sx={{mb:2}}
+                                            loading={true}
+                                            key={key}/>
+                        )
+                        : questions.map(item =>
+                            <QuestionResult
+                                key={item.id}
+                                sx={{mb:2}}
+                                question={item.text}
+                                createdAt="September 3, 2015"
+                                score={item.score}/>
+                        )
+                }
 
-    render() {
-        return (
-            <div className="Questions">
-                <SearchBar label="Search similar questions..." handleSearch={this.handleSearch.bind(this)}/>
-                <Stack sx={{mt: 6}}>
-                    <Card variant='outlined'>
-                        <CardHeader title="How to write letter of complain?"
-                                    subheader="September 14, 2016"
-                                    avatar={
-                                        <Avatar sx={{bgcolor: blue[400], width:'50px', height: '50px'}} aria-label="recipe">
-                                            <Typography>0.65</Typography>
-                                        </Avatar>
-                                    }/>
-                        {/*<CardContent>*/}
+            </Stack>
+            {(questions.length === 0 && !loading) &&
+                <div>
+                    <center>Please input the question and click search.</center>
+                </div>
+            }
 
-                        {/*</CardContent>*/}
-                    </Card>
-                </Stack>
-
-            </div>
-        )
-    }
+        </div>
+    )
 }

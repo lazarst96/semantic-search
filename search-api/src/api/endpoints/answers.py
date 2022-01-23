@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, Body, Path
+from fastapi import APIRouter, Depends, Query, Path
 from pymongo.database import Database
 
 from src import repository, schemas
@@ -11,6 +11,7 @@ router = APIRouter()
 
 @router.get("/{question}", response_model=List[schemas.Answer])
 def get_answers(db: Database = Depends(deps.get_mongo_db),
-                question: str = Path(...)):
+                question: str = Path(...),
+                top_k: int = Query(default=5)):
 
-    return repository.answer.get_answers_for_query(db=db, query=question)
+    return repository.answer.get_answers_for_query(db=db, query=question, top_k=top_k)
