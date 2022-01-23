@@ -4,7 +4,7 @@ import camelcaseKeys from "camelcase-keys";
 
 
 const _axios = axios.create({
-    baseURL: "http://localhost:3001/api",
+    baseURL: process.env.REACT_APP_API_ROOT,
     withCredentials: false,
     headers: {
         'accept': 'application/json',

@@ -1,59 +1,46 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, Button, TextField} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import PropTypes from 'prop-types';
 
+export default function SearchBar({label, handleSearch}) {
+    const [value, setValue] = useState('');
+    const [loading, setLoading] = useState(false);
 
-class SearchBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: ''
-        }
-    }
-
-    handleChange = (prop) => (event) => {
-        this.setState({
-            [prop]: event.target.value
-        });
-    }
-
-    handleKeyPress = (event) => {
+    const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
-            if (this.props.handleSearch !== undefined)
-                this.props.handleSearch(this.state.value);
+            if (handleSearch !== undefined) {
+                setLoading(true);
+                await handleSearch(value);
+                setLoading(false);
+            }
+
         }
     }
 
-    handleSearchButtonClick = () => {
-        if (this.props.handleSearch !== undefined)
-            this.props.handleSearch(this.state.value);
+    const handleSearchButtonClick = async () => {
+        if (handleSearch !== undefined) {
+            setLoading(true);
+            await handleSearch(value);
+            setLoading(false);
+        }
     }
 
+    return (
+        <Box sx={{mt: 4, display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <TextField type="text"
+                       value={value}
+                       sx={{width: '60%'}}
+                       onChange={event => setValue(event.target.value)}
+                       onKeyPress={handleKeyPress}
+                       label={label}/>
+            <Button variant='outlined'
+                    disabled={loading}
+                    sx={{ml: 2}}
+                    startIcon={!loading && <SearchIcon/>}
+                    onClick={handleSearchButtonClick}>
+                {loading ? "Loading..." : "Search"}
+            </Button>
+        </Box>
+    )
 
-    render() {
-        return (
-            <Box sx={{mt: 4, display: "flex", alignItems: "center", justifyContent: "center"}}>
-                <TextField type="text"
-                           value={this.state.value}
-                           sx={{width: '60%'}}
-                           onChange={this.handleChange('value').bind(this)}
-                           onKeyPress={this.handleKeyPress.bind(this)}
-                           label={this.props.label}/>
-                <Button variant='outlined'
-                        sx={{ml: 2}}
-                        startIcon={<SearchIcon/>}
-                        onClick={this.handleSearchButtonClick.bind(this)}>
-                    Search
-                </Button>
-            </Box>
-        )
-    }
-}
-
-SearchBar.propTypes = {
-    label: PropTypes.string,
-    handleSearch: PropTypes.func
-}
-
-export default SearchBar;
+};
